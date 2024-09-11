@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farmacia</title>
+    <style>
+        body.light-mode {
+            background-color: white;
+            color: black;
+        }
+
+        body.dark-mode {
+            background-color: black;
+            color: white;
+        }
+
+        #dark-mode-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body class="light-mode">
+    <button id="dark-mode-button" onclick="toggleDarkMode()">Alterar Modo</button>
+
+    <center>
+        <b>
+           <!-- <a href="https://tairritadotio.github.io/farmacia/"><font color="purple"> Farmacia</font></a>
+            <a href="https://tairritadotio.github.io/ponto2/"><font color="red">Tempo e ajuste</font></a>
+            <a href="https://tairritadotio.github.io/ponto3/"><font color="maroon">Ajuste de ponto</font></a>-->
+            <a href="https://jackymayers.github.io/pontohmas/"><font color="darkorange">Calcular tempo de trabalho</font></a>
+        </b>
+    </center>
+
+    <center>
+        <h1>Farmácia</h1>
+
+        <form id="calculadoraForm">
+            <table>
+                <thead>
+                    <tr>
+                        <th><font color="purple">Produto</font></th>
+                        <th><font color="purple">Preço Unitário</font></th>
+                        <th><font color="purple">Quantidade</font></th>
+                        <th><font color="purple">Valor Total</font></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><font color="DodgerBlue">Analgésico</font></th>
+                        <th><span id="preco-analgesico">$ 200</span> </th>
+                        <th><input type="number" class="quantidade" data-produto="analgesico" min="0" value="0" oninput="atualizarValorTotal()"></th>
+                        <th><span id="total-analgesico">0</span></th>
+                    </tr>
+                    <tr>
+                        <th><font color="DodgerBlue">Bandagem</font></th>
+                        <th><span id="preco-bandagem">$ 500</span> </th>
+                        <th><input type="number" class="quantidade" data-produto="bandagem" min="0" value="0" oninput="atualizarValorTotal()"></th>
+                        <th><span id="total-bandagem">0</span></th>
+                    </tr>
+                    <tr>
+                        <th><font color="DodgerBlue">Gaze</font></th>
+                        <th><span id="preco-gaze">$ 250</span> </th>
+                        <th><input type="number" class="quantidade" data-produto="gaze" min="0" value="0" oninput="atualizarValorTotal()"></th>
+                        <th><span id="total-gaze">0</span></th>
+                    </tr>
+                    <tr>
+                        <th><font color="DodgerBlue">Kit Médico</font></th>
+                        <th><span id="preco-kit-medico">$ 1350</span> </th>
+                        <th><input type="number" class="quantidade" data-produto="kit-medico" min="0" value="0" oninput="atualizarValorTotal()"></th>
+                        <th><span id="total-kit-medico">0</span></th>
+                    </tr>
+                    <tr>
+                        <th><font color="DodgerBlue">Ritmoneury</font></th>
+                        <th><span id="preco-ritmoneury">$ 925</span> </th>
+                        <th><input type="number" class="quantidade" data-produto="ritmoneury" min="0" value="0" oninput="atualizarValorTotal()"></th>
+                        <th><span id="total-ritmoneury">0</span></th>
+                    </tr>
+                    <tr>
+                        <th><font color="DodgerBlue">Sinkalmy</font></th>
+                        <th><span id="preco-sinkalmy">$ 750</span> </th>
+                        <th><input type="number" class="quantidade" data-produto="sinkalmy" min="0" value="0" oninput="atualizarValorTotal()"></th>
+                        <th><span id="total-sinkalmy">0</span></th>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+<br/>
+        <div id="resultado-produtos">
+            <b>Valor Total de Todos os Produtos:$</b> <span id="total-geral"><b>0</b></span>
+        </div>
+<br/>
+        <div id="resultado-tempo">
+            <label for="hora-doacao">Digite a hora da coleta (formato hh:mm): </label>
+            <input type="text" id="hora-doacao" placeholder="hh:mm" onblur="verificarTempoDoacao()">
+            <p id="tempo-resultado"></p>
+        </div>
+
+        <h1 style="text-align: center;">Valores do atendimento</h1>
+        <table style="margin: 0 auto;">
+            <tr>
+                <th style="font-weight: bold; text-align: center;"><font color="purple">Tratamento</font> - <font color="DodgerBlue">$300</font></th>
+            </tr>
+            <!--<tr>
+                <th style="font-weight: bold; text-align: center;"><font color="purple">Policial fardado</font> - <font color="red">$ 250</font></th>
+            </tr>-->
+            <tr>
+                <th style="font-weight: bold; text-align: center;"><font color="purple">Doadores de sangue</font> - <font color="DodgerBlue">Grátis dentro de 2 horas após a doação</font></th>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; text-align: center;"><font color="purple">Psicotecnicos caça</font> - <font color="DodgerBlue">$ 7000</font></th>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; text-align: center;"><font color="purple">Psicotecnicos  policia</font> - <font color="DodgerBlue">$ 5000</font></th>
+            </tr>
+        </table>
+
+        <script>
+            function atualizarValorTotal() {
+                var quantidades = document.getElementsByClassName("quantidade");
+                var precos = [200, 500, 250, 1350, 925, 750];
+                var valorTotalGeral = 0;
+
+                for (var i = 0; i < quantidades.length; i++) {
+                    var quantidade = parseFloat(quantidades[i].value);
+                    var totalProduto = quantidade * precos[i];
+                    var produto = quantidades[i].getAttribute("data-produto");
+                    document.getElementById("total-" + produto).textContent = totalProduto;
+                    valorTotalGeral += totalProduto;
+                }
+
+                document.getElementById("total-geral").innerHTML = "<b>" + valorTotalGeral + "</b>";
+            }
+
+            function toggleDarkMode() {
+                const body = document.body;
+                if (body.classList.contains("dark-mode")) {
+                    body.classList.remove("dark-mode");
+                } else {
+                    body.classList.add("dark-mode");
+                }
+            }
+
+            function verificarTempoDoacao() {
+                var horaDoacao = document.getElementById('hora-doacao').value;
+                var tempoDoacao = new Date();
+                var horaAtual = tempoDoacao.getHours();
+                var minutosAtual = tempoDoacao.getMinutes();
+
+                var horaDoacaoSplit = horaDoacao.split(':');
+                var horaDoacaoInt = parseInt(horaDoacaoSplit[0]);
+                var minutosDoacaoInt = parseInt(horaDoacaoSplit[1]);
+
+                var tempoPassadoMinutos = (horaAtual - horaDoacaoInt) * 60 + (minutosAtual - minutosDoacaoInt);
+                var tempoPassadoHoras = Math.floor(tempoPassadoMinutos / 60);
+                var tempoPassadoMinutosRestantes = tempoPassadoMinutos % 60;
+
+                if (tempoPassadoMinutos <= 120 && tempoPassadoMinutos >= 0) {
+                    var mensagem = '<b>Ainda dentro do tempo para atendimento gratuito.</b><br>';
+                    mensagem += 'Tempo passado desde a doação: ' + tempoPassadoHoras + ' horas e ' + tempoPassadoMinutosRestantes + ' minutos.';
+                    document.getElementById('tempo-resultado').innerHTML = mensagem;
+                } else {
+                    document.getElementById('tempo-resultado').innerHTML = '<b>Tempo para atendimento gratuito expirado.</b>';
+                }
+            }
+        </script>
+    </center>
+
+    <center>
+        <img src="https://i.postimg.cc/nr7qgTWj/Logo-VRT-Andrea-Silva11.png" alt="">
+    </center>
+</body>
+</html>
